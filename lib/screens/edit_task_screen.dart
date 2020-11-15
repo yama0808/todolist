@@ -19,8 +19,8 @@ class EditTaskScreen extends StatefulWidget {
 }
 
 class _EditTaskScreenState extends State<EditTaskScreen> {
-  TextEditingController _titleController;
-  TextEditingController _detailController;
+  final _titleController = TextEditingController();
+  final _detailController = TextEditingController();
   DateTime _date;
 
   Future<void> _selectDate(BuildContext context) async {
@@ -35,9 +35,8 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
   @override
   void initState() {
     super.initState();
-
-    _titleController = TextEditingController(text: widget.task.title);
-    _detailController = TextEditingController(text: widget.task.detail);
+    _titleController.text = widget.task.title;
+    _detailController.text = widget.task.detail;
     _date = widget.task.due;
   }
 
@@ -100,8 +99,8 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                       ],
                     ),
                   ),
-                  TextField(
-                    controller: _titleController,
+                  TextFormField(
+                    initialValue: widget.task.title,
                     style: TextStyle(
                       fontSize: 20.0,
                     ),
@@ -122,8 +121,8 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                         width: 15.0,
                       ),
                       Expanded(
-                        child: TextField(
-                          controller: _detailController,
+                        child: TextFormField(
+                          initialValue: widget.task.detail,
                           decoration: InputDecoration(
                             hintText: '詳細を追加',
                             border: InputBorder.none,
