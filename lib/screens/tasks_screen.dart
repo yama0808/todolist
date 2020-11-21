@@ -99,51 +99,53 @@ class _TasksScreenState extends State<TasksScreen> {
                             horizontal: 20.0,
                             vertical: 5.0,
                           ),
-                          child: Row(
-                            children: [
-                              Consumer<Task>(
-                                builder: (context, task, _) => Checkbox(
-                                  value: task.isDone,
-                                  onChanged: (value) => task.toggleDoneStatus(),
+                          child: GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () async {
+                              final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EditTaskScreen(
+                                    task: tasks[index],
+                                  ),
                                 ),
-                              ),
-                              SizedBox(
-                                width: 15.0,
-                              ),
-                              GestureDetector(
-                                onTap: () async {
-                                  final result = await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => EditTaskScreen(
-                                        task: tasks[index],
+                              );
+                              if (result != null)
+                                try {
+                                  await Provider.of<Tasks>(context,
+                                          listen: false)
+                                      .deleteTask(result)
+                                      .then((_) {
+                                    Scaffold.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          '１件のタスクを削除しました',
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                  if (result != null)
-                                    try {
-                                      await Provider.of<Tasks>(context,
-                                              listen: false)
-                                          .deleteTask(result)
-                                          .then((_) {
-                                        Scaffold.of(context).showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              '１件のタスクを削除しました',
-                                            ),
-                                          ),
-                                        );
-                                      });
-                                    } catch (error) {
-                                      print('error');
-                                    }
-                                },
-                                child: Text(
+                                    );
+                                  });
+                                } catch (error) {
+                                  print('error');
+                                }
+                            },
+                            child: Row(
+                              children: [
+                                Consumer<Task>(
+                                  builder: (context, task, _) => Checkbox(
+                                    value: task.isDone,
+                                    onChanged: (value) =>
+                                        task.toggleDoneStatus(),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 15.0,
+                                ),
+                                Text(
                                   tasks[index].title,
                                   style: TextStyle(fontSize: 16.0),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       );
