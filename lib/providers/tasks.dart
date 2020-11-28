@@ -27,8 +27,8 @@ class Tasks with ChangeNotifier {
         id: data.id,
         title: data.data()['title'],
         detail: data.data()['detail'],
-        due: due.toDate(),
-        createdAt: createdAt.toDate(),
+        due: due != null ? due.toDate() : null,
+        createdAt: due != null ? createdAt.toDate() : null,
       );
       _items.add(task);
     });
