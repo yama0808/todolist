@@ -1,5 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:todo_app/helpers/db_helper.dart';
 
 class Task with ChangeNotifier {
   final String id;
@@ -24,12 +24,10 @@ class Task with ChangeNotifier {
   }
 
   void toggleDoneStatus() async {
-    final oldStatus = isDone;
     isDone = !isDone;
     notifyListeners();
-
-    FirebaseFirestore.instance.collection('tasks').doc(id).update({
-      'isDone': isDone,
+    DBHelper.update('tasks', {
+      'isDone': isDone ? 0 : 1,
     });
   }
 }
