@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/providers/task.dart';
@@ -21,19 +20,19 @@ class _TasksScreenState extends State<TasksScreen> {
   void initState() {
     super.initState();
 
-    Firebase.initializeApp().whenComplete(() {
-      if (!_isInit) {
+    // Firebase.initializeApp().whenComplete(() {
+    if (!_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<Tasks>(context, listen: false).fetchAndSetTasks().then((_) {
         setState(() {
-          _isLoading = true;
+          _isLoading = false;
         });
-        Provider.of<Tasks>(context, listen: false).fetchAndSetTasks().then((_) {
-          setState(() {
-            _isLoading = false;
-          });
-        });
-      }
-      _isInit = true;
-    });
+      });
+    }
+    _isInit = true;
+    // });
   }
 
   void buildBottomSheet(BuildContext context) {
