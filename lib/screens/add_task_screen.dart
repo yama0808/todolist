@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/providers/task.dart';
 import 'package:todo_app/providers/tasks.dart';
+import 'package:uuid/uuid.dart';
 
 class AddTaskScreen extends StatefulWidget {
   static const routeName = '/add-task';
@@ -125,6 +126,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   FlatButton(
                     onPressed: () {
                       final newTask = Task(
+                        id: Uuid().v4(),
                         title: _titleController.text,
                         detail: _detailController.text,
                         due: _date,

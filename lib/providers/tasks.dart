@@ -1,5 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:todo_app/helpers/db_helper.dart';
 import 'package:todo_app/providers/task.dart';
 
 class Tasks with ChangeNotifier {
@@ -18,76 +18,66 @@ class Tasks with ChangeNotifier {
   }
 
   Future<void> fetchAndSetTasks() async {
-    QuerySnapshot snapshot =
-        await FirebaseFirestore.instance.collection('tasks').get();
-    snapshot.docs.forEach((data) {
-      Timestamp createdAt = data.data()['createdAt'];
-      Timestamp due = data.data()['due'];
-      final task = Task(
-        id: data.id,
-        title: data.data()['title'],
-        detail: data.data()['detail'],
-        due: due != null ? due.toDate() : null,
-        createdAt: due != null ? createdAt.toDate() : null,
-      );
-      _items.add(task);
-    });
-    notifyListeners();
+    final dataList = await DBHelper.getData('tasks');
+    if (dataList != null) {
+      _items = dataList
+          .map(
+            (item) => Task(
+              id: item['id'],
+              title: item['title'],
+              detail: item['detail'],
+              due: DateTime.parse(item['due']),
+              createdAt: DateTime.parse(item['createdAt']),
+              isDone: item['isDone'] == 0 ? true : false,
+            ),
+          )
+          .toList();
+      notifyListeners();
+    }
   }
 
   Future<void> addTask(Task task) async {
-    DocumentReference documentReference =
-        FirebaseFirestore.instance.collection('tasks').doc();
-    FirebaseFirestore.instance
-        .collection('tasks')
-        .doc(documentReference.id)
-        .set({
-      'id': documentReference.id,
+    final newTask = Task(
+      id: task.id,
+      title: task.title,
+      detail: task.detail,
+      due: task.due,
+      createdAt: task.createdAt,
+    );
+    _items.add(newTask);
+    notifyListeners();
+    DBHelper.insert('tasks', {
+      'id': task.id,
       'title': task.title,
       'detail': task.detail,
-      'due': task.due,
-      'createdAt': task.createdAt,
-    }).then((value) {
-      final newTask = Task(
-        id: documentReference.id,
-        title: task.title,
-        detail: task.detail,
-        due: task.due,
-        createdAt: task.createdAt,
-      );
-      _items.add(newTask);
-      notifyListeners();
+      'due': task.due.toString(),
+      'createdAt': task.createdAt.toString(),
+      'isDone': task.isDone ? 0 : 1,
     });
   }
 
   Future<void> updateTask(String id, Task newTask) async {
     final taskIndex = _items.indexWhere((task) => task.id == id);
     if (taskIndex >= 0) {
-      FirebaseFirestore.instance.collection('tasks').doc(id).update({
+      _items[taskIndex] = newTask;
+      DBHelper.update('tasks', {
         'id': newTask.id,
         'title': newTask.title,
         'detail': newTask.detail,
-        'due': newTask.due,
-        'createdAt': newTask.createdAt,
-      }).then((_) {
-        _items[taskIndex] = newTask;
-        notifyListeners();
+        'due': newTask.due.toString(),
+        'createdAt': newTask.createdAt.toString(),
+        'isDone': newTask.isDone ? 0 : 1,
       });
+      notifyListeners();
     } else {
       print('...');
     }
   }
 
   Future<void> deleteTask(String id) async {
-    FirebaseFirestore.instance
-        .collection('tasks')
-        .doc(id)
-        .delete()
-        .then((value) {
-      final existingTaskIndex =
-          _items.indexWhere((product) => product.id == id);
-      _items.removeAt(existingTaskIndex);
-      notifyListeners();
-    });
+    final existingTaskIndex = _items.indexWhere((product) => product.id == id);
+    _items.removeAt(existingTaskIndex);
+    DBHelper.delete('tasks', id);
+    notifyListeners();
   }
 }
