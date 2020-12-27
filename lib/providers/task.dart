@@ -23,7 +23,7 @@ class Task with ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleDoneStatus() async {
+  void toggleDoneStatus() {
     isDone = !isDone;
     notifyListeners();
     DBHelper.update('tasks', {

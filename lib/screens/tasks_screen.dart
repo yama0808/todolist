@@ -127,23 +127,29 @@ class _TasksScreenState extends State<TasksScreen> {
                                   print('error');
                                 }
                             },
-                            child: Row(
-                              children: [
-                                Consumer<Task>(
-                                  builder: (context, task, _) => Checkbox(
+                            child: Consumer<Task>(
+                              builder: (context, task, _) => Row(
+                                children: [
+                                  Checkbox(
+                                    activeColor: Colors.blueAccent,
                                     value: task.isDone,
                                     onChanged: (value) =>
                                         task.toggleDoneStatus(),
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 15.0,
-                                ),
-                                Text(
-                                  tasks[index].title,
-                                  style: TextStyle(fontSize: 16.0),
-                                ),
-                              ],
+                                  SizedBox(
+                                    width: 15.0,
+                                  ),
+                                  Text(
+                                    task.title,
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      decoration: task.isDone
+                                          ? TextDecoration.lineThrough
+                                          : TextDecoration.none,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
