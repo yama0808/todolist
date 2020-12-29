@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/providers/task.dart';
 import 'package:todo_app/providers/tasks.dart';
+import 'package:todo_app/widgets/date_chip.dart';
 import 'package:uuid/uuid.dart';
 
 class AddTaskScreen extends StatefulWidget {
@@ -80,23 +80,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               ),
               (_date == null)
                   ? SizedBox.shrink()
-                  : Chip(
-                      label: Text(
-                        DateFormat('MM月dd日').format(_date),
-                      ),
-                      backgroundColor: Colors.transparent,
-                      shape: StadiumBorder(
-                        side: BorderSide(
-                          color: Colors.grey,
-                        ),
-                      ),
-                      deleteIcon: Icon(
-                        Icons.clear,
-                        color: Colors.grey,
-                        size: 18.0,
-                      ),
-                      deleteIconColor: Colors.grey,
-                      onDeleted: () {},
+                  : DateChip(
+                      date: _date,
                     ),
               Row(
                 children: [
