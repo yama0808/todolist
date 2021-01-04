@@ -20,7 +20,6 @@ class _TasksScreenState extends State<TasksScreen> {
   void initState() {
     super.initState();
 
-    // Firebase.initializeApp().whenComplete(() {
     if (!_isInit) {
       setState(() {
         _isLoading = true;
@@ -32,7 +31,6 @@ class _TasksScreenState extends State<TasksScreen> {
       });
     }
     _isInit = true;
-    // });
   }
 
   void buildBottomSheet(BuildContext context) {
