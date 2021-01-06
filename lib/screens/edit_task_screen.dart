@@ -65,7 +65,18 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                             Icons.arrow_back_rounded,
                           ),
                           onPressed: () {
-                            Navigator.pop(context);
+                            final task = Task(
+                              id: widget.task.id,
+                              title: _titleController.text,
+                              detail: _detailController.text,
+                              due: _date,
+                              createdAt: DateTime.now(),
+                            );
+                            Provider.of<Tasks>(context, listen: false)
+                                .updateTask(widget.task.id, task)
+                                .then(
+                                  (_) => Navigator.pop(context),
+                                );
                           },
                         ),
                         Spacer(),
@@ -76,10 +87,11 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                           onPressed: () {
                             final task = Task(
                               id: widget.task.id,
-                              title: _titleController.text,
-                              detail: _detailController.text,
-                              due: _date,
-                              createdAt: DateTime.now(),
+                              title: widget.task.title,
+                              detail: widget.task.detail,
+                              due: widget.task.due,
+                              createdAt: widget.task.createdAt,
+                              isDone: true,
                             );
                             Provider.of<Tasks>(context, listen: false)
                                 .updateTask(widget.task.id, task)
