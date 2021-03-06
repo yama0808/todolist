@@ -52,7 +52,18 @@ class TaskTile extends StatelessWidget {
               Checkbox(
                 activeColor: Colors.blueAccent,
                 value: task.isDone,
-                onChanged: (value) => task.toggleDoneStatus(),
+                onChanged: (value) {
+                  task.toggleDoneStatus();
+                  if (task.isDone) {
+                    Scaffold.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          '１件のタスクを完了としました',
+                        ),
+                      ),
+                    );
+                  }
+                },
               ),
               SizedBox(
                 width: 15.0,
