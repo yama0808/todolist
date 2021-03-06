@@ -71,6 +71,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                               detail: _detailController.text,
                               due: _date,
                               createdAt: DateTime.now(),
+                              isDone: widget.task.isDone,
                             );
                             Provider.of<Tasks>(context, listen: false)
                                 .updateTask(widget.task.id, task)
