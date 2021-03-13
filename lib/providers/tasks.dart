@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 import 'package:todo_app/helpers/db_helper.dart';
 import 'package:todo_app/providers/task.dart';
 
@@ -26,8 +27,13 @@ class Tasks with ChangeNotifier {
               id: item['id'],
               title: item['title'],
               detail: item['detail'],
-              due: DateTime.parse(item['due']),
-              createdAt: DateTime.parse(item['createdAt']),
+              due: item['due'] != null
+                  ? DateFormat('yyyy-MM-dd HH:mm:ss').parseStrict(item['due'])
+                  : null,
+              createdAt: item['createdAt'] != null
+                  ? DateFormat('yyyy-MM-dd HH:mm:ss')
+                      .parseStrict(item['createdAt'])
+                  : null,
               isDone: item['isDone'] == 0 ? true : false,
             ),
           )
@@ -50,8 +56,8 @@ class Tasks with ChangeNotifier {
       'id': task.id,
       'title': task.title,
       'detail': task.detail,
-      'due': task.due.toString(),
-      'createdAt': task.createdAt.toString(),
+      'due': DateFormat('yyyy-MM-dd HH:mm:ss').format(task.due),
+      'createdAt': DateFormat('yyyy-MM-dd HH:mm:ss').format(task.createdAt),
       'isDone': task.isDone ? 0 : 1,
     });
   }
@@ -64,8 +70,9 @@ class Tasks with ChangeNotifier {
         'id': newTask.id,
         'title': newTask.title,
         'detail': newTask.detail,
-        'due': newTask.due.toString(),
-        'createdAt': newTask.createdAt.toString(),
+        'due': DateFormat('yyyy-MM-dd HH:mm:ss').format(newTask.due),
+        'createdAt':
+            DateFormat('yyyy-MM-dd HH:mm:ss').format(newTask.createdAt),
         'isDone': newTask.isDone ? 0 : 1,
       });
       notifyListeners();
